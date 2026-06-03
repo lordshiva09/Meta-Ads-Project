@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<!-- ==========================================================
+     index.html  —  Meta Ads Manager
+     ==========================================================
+     FILE STRUCTURE:
+
+     1.  <head>
+         - charset, viewport meta tags
+         - Page title
+         - Chart.js CDN (for charts modal)
+         - <link> to style.css
+
+     2.  TOP NAV  (.topnav)
+         - Meta logo (img from CDN)
+         - "Meta Ads Manager" title
+         - Bell + User icons
+
+     3.  LAYOUT WRAPPER  (.layout)
+         - Flex row: sidebar + main
+
+     4.  SIDEBAR  (.sidebar)
+         - SVG icon buttons (Campaigns, Ad Sets,
+           Audiences, Reports, Billing)
+         - Bottom group: Help, Archive, Settings,
+           Notifications, Search, Admin/Shield
+
+     5.  MAIN CONTENT  (.main)
+
+         5a. PAGE HEADER  (.phdr)
+             - Page title (changes with tab)
+             - Account dropdown
+             - "Updated just now" + refresh icon
+             - Discard Drafts button
+             - Review and publish (N) button
+             - ··· and chart icon buttons
+
+         5b. SEARCH ROW  (.srow)
+             - Search and filter input
+
+         5c. DATE BAR  (.datebar)
+             - Date range picker
+             - Edit pencil icon
+
+         5d. CARD (white bg wrapper)
+
+             5d-i.  TABS  (.tabs)
+                    - Campaigns tab (default active)
+                    - Ad sets tab
+                    - Ads tab
+                    - Each has onclick="switchTab('...')"
+
+             5d-ii. TOOLBAR  (.tbar)
+                    - + Create (green)
+                    - Edit button (disabled until 1 selected)
+                    - A/B test
+                    - Undo
+                    - Delete (disabled until selected)
+                    - Duplicate (disabled until selected)
+                    - Move, Tag, Rules ▾
+                    - View Setup, grid toggles
+                    - Reports ▾, Export ▾
+
+             5d-iii. CAMPAIGNS TABLE  (#tblOuter)
+                     Columns:
+                     [✓] Off/On | Campaign | Delivery |
+                     Bid strategy | Budget | Attribution |
+                     Results | Reach | Impressions |
+                     Cost per result | Amount spent | Ends
+                     - <tbody id="tbody"> filled by JS
+                     - <tfoot> shows totals
+
+             5d-iv.  EMPTY STATE  (#empty)
+                     Shown when no campaigns
+
+             5d-v.   AD SETS PANEL  (#panel-adsets)
+                     - Separate table for Ad sets tab
+                     - <tbody id="adsets-tbody">
+
+             5d-vi.  ADS PANEL  (#panel-ads)
+                     - Separate table for Ads tab
+                     - Columns include: Format, Clicks, CTR
+                     - <tbody id="ads-tbody">
+
+     6.  NOTIFICATION POPUP  (#notif)
+         - "Add payment method" floating card
+         - Auto-shows after 2s (via JS setTimeout)
+
+     7.  BOTTOM BANNER  (.bbanner)
+         - WSCubeTech promo bar (fixed)
+
+     8.  TOAST CONTAINER  (#twrap)
+         - Dynamically filled by toast() JS function
+
+     9.  MODALS (all hidden by default, .ov class)
+
+         9a. CREATE/EDIT CAMPAIGN  (#ovCamp)
+             Sections: Campaign Details, Budget & Bidding,
+             Attribution & Performance
+             Fields: name, objective, status, budget,
+             bid strategy, amount spent, end date,
+             attribution, toggle, results, reach,
+             impressions, cost per result, notes
+
+         9b. DELETE CONFIRM  (#ovDel)
+             - Shows campaign name
+             - Cancel / Delete buttons
+
+         9c. VIEW DETAILS  (#ovView)
+             - Shows all campaign fields
+             - Buttons: Close / View Charts / Edit
+
+         9d. CHARTS MODAL  (#ovCharts)
+             - 4 KPI cards
+             - 5 chart tabs (Results, Reach,
+               Impressions, Amount Spent, Cost/Result)
+             - Chart.js canvas (#mchart)
+
+     10. <script src="script.js">
+     ========================================================== -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meta Ads Manager - Manage ads</title>
+
+  <!-- Chart.js library (used in Charts Modal) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <!-- All CSS styles -->
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="tn-logo">
+    <img src="https://static.xx.fbcdn.net/rsrc.php/yb/r/CnOoIyhtLSO.svg" alt="Meta" style="width:40px;height:auto;display:block;"/>
+  </div>
+  <span class="tn-title">Meta Ads Manager</span>
+  <div class="tn-sp"></div>
+  <div class="tn-ic">🔔</div>
+  <div class="tn-ic">👤</div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="si active" title="Campaigns"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></div>
+    <div class="si" title="Ad Sets"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+    <div class="si" title="Audiences"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+    <div class="si" title="Reports"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+    <div class="sdiv"></div>
+    <div class="si" title="Billing"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg></div>
+    <div class="sbottom">
+      <div class="sdiv"></div>
+      <div class="si" title="Help" style="font-size:14px;font-weight:700;">?</div>
+      <div class="si" title="Archive" style="position:relative;"><svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27z"/></svg><span class="si-badge">1</span></div>
+      <div class="si" title="Settings"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 9.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div>
+      <div class="si" title="Notifications"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></div>
+      <div class="si" title="Search"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+      <div class="si" title="Admin"><svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- PAGE HEADER -->
+    <div class="phdr">
+      <span class="phdr-title" id="pageTitle">Campaigns</span>
+      <div class="acct-sel">Harmeet Kaur (785314956799252) <svg width="12" height="12" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></div>
+      <div class="phdr-sp"></div>
+      <div class="phdr-upd">Updated just now <svg width="15" height="15" viewBox="0 0 24 24" fill="#65676b" style="cursor:pointer" onclick="toast('Refreshed!','in')"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div>
+      <button class="btn-discard" onclick="discardDrafts()">Discard Drafts</button>
+      <button class="btn-review" onclick="publishDrafts()">✓ Review and publish (<span id="draftCnt">0</span>)</button>
+      <button class="btn-ico">···</button>
+      <button class="btn-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="#65676b"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></button>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="srow">
+      <input class="srch" id="srch" placeholder="Search and filter" oninput="renderTable()"/>
+    </div>
+
+    <!-- DATE -->
+    <div class="datebar">
+      <div class="dpick"><svg width="14" height="14" viewBox="0 0 24 24" fill="#65676b"><path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>This month: 1 Jun 2024 - 23 Jun 2024<svg width="12" height="12" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#65676b" style="cursor:pointer"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>
+    </div>
+
+    <div style="background:white;">
+      <!-- TABS -->
+      <div class="tabs">
+        <div class="tab active" id="tab-campaigns" onclick="switchTab('campaigns')"><div class="tab-ic bl" id="tabic-campaigns"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></div>Campaigns</div>
+        <div class="tab" id="tab-adsets" onclick="switchTab('adsets')"><div class="tab-ic gr" id="tabic-adsets"><svg width="11" height="11" viewBox="0 0 24 24" fill="#65676b"><circle cx="12" cy="12" r="9"/></svg></div>Ad sets</div>
+        <div class="tab" id="tab-ads" onclick="switchTab('ads')"><div class="tab-ic gr" id="tabic-ads"><svg width="11" height="11" viewBox="0 0 24 24" fill="#65676b"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>Ads</div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="tbar">
+        <button class="btn-create" id="btnCreate" onclick="openAdd()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Create
+        </button>
+        <button class="btn-t" title="Duplicate page"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <button class="btn-t" id="btnEdit" disabled onclick="editSelected()"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>Edit</button>
+        <div class="tsep"></div>
+        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 2v2H5v16h14V4h-2V2H7z"/></svg>A/B test</button>
+        <div class="tsep"></div>
+        <button class="btn-t" onclick="undoLast()" title="Undo"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg></button>
+        <button class="btn-t" id="btnDel" disabled onclick="deleteSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+        <button class="btn-t" id="btnDup" disabled onclick="dupSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2z"/></svg></button>
+        <button class="btn-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg></button>
+        <button class="btn-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M21.41 11.58l-9-9A2 2 0 0011 2H4a2 2 0 00-2 2v7a2 2 0 00.59 1.42l9 9A2 2 0 0013 22a2 2 0 001.41-.59l7-7A2 2 0 0022 13a2 2 0 00-.59-1.42zM5.5 7A1.5 1.5 0 114 5.5 1.5 1.5 0 015.5 7z"/></svg></button>
+        <button class="btn-t">Rules ▾</button>
+        <div class="tsp"></div>
+        <button class="btn-t">View Setup<span class="vdot"></span></button>
+        <button class="btn-t"><svg width="15" height="15" viewBox="0 0 24 24" fill="#1c1e21"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+        <button class="btn-t">⊞</button>
+        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <div class="tsep"></div>
+        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>Reports ▾</button>
+        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Export ▾</button>
+      </div>
+
+      <!-- TABLE -->
+      <div class="tbl-outer" id="tblOuter">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="chkAll" onchange="toggleAll(this)"/></th>
+              <th>Off/On</th>
+              <th>Campaign <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+              <th class="th-bl">Delivery <svg width="10" height="10" viewBox="0 0 24 24" fill="#1877f2"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="#1877f2"><path d="M7 10l5 5 5-5z"/></svg></th>
+              <th>Bid strategy</th>
+              <th>Budget</th>
+              <th>Attribution setting</th>
+              <th>Results <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+              <th>Reach <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+              <th>Impressions <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+              <th>Cost per result <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+              <th>Amount spent <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+              <th>Ends <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+          <tfoot>
+            <tr>
+              <td></td><td></td>
+              <td><div class="sum-row">Results from <span id="campCnt" style="font-weight:700;color:#1c1e21;margin:0 4px;">0</span> campaign <span class="iico">i</span></div><div style="font-size:11px;color:#65676b;margin-top:2px;" id="acctSub"></div></td>
+              <td></td><td></td><td></td><td></td>
+              <td id="ft_res" style="font-weight:700;color:#1c1e21;">–</td>
+              <td id="ft_reach">–</td>
+              <td id="ft_imp">–</td>
+              <td id="ft_cpr">–</td>
+              <td id="ft_spent" style="font-weight:700;color:#1c1e21;">₹0.00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="empty" id="empty" style="display:none;">
+        <div style="font-size:44px;">📭</div>
+        <h3>No campaigns yet</h3>
+        <p>Click <strong>+ Create</strong> to add your first campaign</p>
+      </div>
+
+      <!-- AD SETS PANEL -->
+      <div id="panel-adsets" style="display:none;">
+        <div class="tbl-outer">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox"/></th>
+                <th>Off/On</th>
+                <th>Ad Set <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th class="th-bl">Delivery <svg width="10" height="10" viewBox="0 0 24 24" fill="#1877f2"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th>Budget</th>
+                <th>Schedule</th>
+                <th>Results <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th>Reach <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th>Impressions</th>
+                <th>Cost per result</th>
+                <th>Amount spent</th>
+              </tr>
+            </thead>
+            <tbody id="adsets-tbody"></tbody>
+            <tfoot>
+              <tr>
+                <td></td><td></td>
+                <td><div class="sum-row">Results from <span id="adsets-count" style="font-weight:700;color:#1c1e21;margin:0 4px;">0</span> ad set(s) <span class="iico">i</span></div></td>
+                <td></td><td></td><td></td>
+                <td id="as_res" style="font-weight:700;color:#1c1e21;">–</td>
+                <td id="as_reach">–</td>
+                <td id="as_imp">–</td>
+                <td>–</td>
+                <td id="as_spent" style="font-weight:700;color:#1c1e21;">₹0.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="empty" id="empty-adsets" style="display:none;">
+          <div style="font-size:44px;">🎯</div>
+          <h3>No ad sets yet</h3>
+          <p>Click <strong>+ Create</strong> to add your first ad set</p>
+        </div>
+      </div>
+
+      <!-- ADS PANEL -->
+      <div id="panel-ads" style="display:none;">
+        <div class="tbl-outer">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox"/></th>
+                <th>Off/On</th>
+                <th>Ad Name <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th class="th-bl">Delivery <svg width="10" height="10" viewBox="0 0 24 24" fill="#1877f2"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th>Ad Set</th>
+                <th>Format</th>
+                <th>Results <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th>Reach <svg width="10" height="10" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>CTR</th>
+                <th>Cost per result</th>
+                <th>Amount spent</th>
+              </tr>
+            </thead>
+            <tbody id="ads-tbody"></tbody>
+            <tfoot>
+              <tr>
+                <td></td><td></td>
+                <td><div class="sum-row">Results from <span id="ads-count" style="font-weight:700;color:#1c1e21;margin:0 4px;">0</span> ad(s) <span class="iico">i</span></div></td>
+                <td></td><td></td><td></td>
+                <td id="ad_res" style="font-weight:700;color:#1c1e21;">–</td>
+                <td id="ad_reach">–</td>
+                <td id="ad_imp">–</td>
+                <td id="ad_clicks">–</td>
+                <td>–</td>
+                <td>–</td>
+                <td id="ad_spent" style="font-weight:700;color:#1c1e21;">₹0.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="empty" id="empty-ads" style="display:none;">
+          <div style="font-size:44px;">🖼️</div>
+          <h3>No ads yet</h3>
+          <p>Click <strong>+ Create</strong> to add your first ad</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION POPUP -->
+<div class="notif hidden" id="notif">
+  <div class="nh"><div class="nt"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1877f2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Updates</div><button class="nc" onclick="document.getElementById('notif').classList.add('hidden')">✕</button></div>
+  <div class="nb">
+    <div style="font-size:28px;text-align:center;margin-bottom:8px;">💳</div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Add payment method</div>
+    <div style="font-size:12px;color:#65676b;line-height:1.5;">There's a problem with the payment method for Harmeet Kaur. You'll need to add or update the payment information before you can publish ads.</div>
+    <button class="bnotif" onclick="toast('Payment method added! (simulated)','ok');document.getElementById('notif').classList.add('hidden')">Add payment method</button>
+  </div>
+</div>
+
+<!-- BOTTOM BANNER -->
+<div class="bbanner">BECOME A <b>&nbsp;DIGITAL MARKETER?&nbsp;</b> CALL US AT: <b>&nbsp;+91 93529 76305&nbsp;</b> OR VISIT <a href="#">WWW.WSCUBETECH.COM</a></div>
+<div class="twrap" id="twrap"></div>
+
+<!-- ══ CREATE / EDIT MODAL ══ -->
+<div class="ov" id="ovCamp">
+  <div class="modal">
+    <div class="mhdr">
+      <span class="mtitle" id="mTitle">Create Campaign</span>
+      <button class="mcl" onclick="closeOv('ovCamp')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="sh">Campaign Details</div>
+      <div class="fg">
+        <label class="fl">Campaign Name <em>*</em></label>
+        <input class="fi" id="f_name" placeholder="e.g. Summer Sale 2024" oninput="this.classList.remove('inv')"/>
+        <div class="ferr">Campaign name is required</div>
+      </div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Objective</label>
+          <select class="fs" id="f_obj"><option>Awareness</option><option>Traffic</option><option>Engagement</option><option>Leads</option><option>App promotion</option><option>Sales</option></select>
+        </div>
+        <div class="fg"><label class="fl">Status</label>
+          <select class="fs" id="f_status"><option value="draft">In draft</option><option value="active">Active</option><option value="paused">Paused</option></select>
+        </div>
+      </div>
+
+      <div class="sh">Budget & Bidding</div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Daily Budget (₹)</label>
+          <input class="fi" id="f_budget" type="number" placeholder="e.g. 500" min="1"/>
+          <div class="fhint">Minimum ₹57/day</div>
+        </div>
+        <div class="fg"><label class="fl">Bid Strategy</label>
+          <select class="fs" id="f_bid"><option>Lowest cost</option><option>Cost cap</option><option>Bid cap</option><option>Using ad set bid</option></select>
+        </div>
+      </div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Amount Spent (₹)</label>
+          <input class="fi" id="f_spent" type="number" placeholder="e.g. 2500" min="0" step="0.01"/>
+        </div>
+        <div class="fg"><label class="fl">End Date</label>
+          <input class="fi" id="f_ends" type="date"/>
+          <div class="fhint">Leave blank = Ongoing</div>
+        </div>
+      </div>
+
+      <div class="sh">Attribution & Performance</div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Attribution Window</label>
+          <select class="fs" id="f_attr"><option>7-day click</option><option>1-day click</option><option>7-day click or 1-day view</option><option>Using ad set bud</option></select>
+        </div>
+        <div class="fg"><label class="fl">Toggle</label>
+          <select class="fs" id="f_active"><option value="on">ON</option><option value="off">OFF</option></select>
+        </div>
+      </div>
+      <div class="fr3">
+        <div class="fg"><label class="fl">Results</label><input class="fi" id="f_results" type="number" placeholder="e.g. 1240" min="0"/></div>
+        <div class="fg"><label class="fl">Reach</label><input class="fi" id="f_reach" type="number" placeholder="e.g. 45000" min="0"/></div>
+        <div class="fg"><label class="fl">Impressions</label><input class="fi" id="f_imp" type="number" placeholder="e.g. 120000" min="0"/></div>
+      </div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Cost per Result (₹)</label>
+          <input class="fi" id="f_cpr" type="number" placeholder="Auto-calculated if blank" step="0.01" min="0"/>
+          <div class="fhint">Auto = Amount Spent ÷ Results</div>
+        </div>
+        <div class="fg"><label class="fl">Notes</label>
+          <input class="fi" id="f_notes" placeholder="Optional campaign notes"/>
+        </div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="bcancel" onclick="closeOv('ovCamp')">Cancel</button>
+      <button class="bsave" id="saveBtn" onclick="saveCamp()">💾 Save Campaign</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DELETE MODAL ══ -->
+<div class="ov" id="ovDel">
+  <div class="modal sm">
+    <div class="mhdr"><span class="mtitle">Delete Campaign</span><button class="mcl" onclick="closeOv('ovDel')">✕</button></div>
+    <div class="mbody">
+      <div class="di">🗑️</div>
+      <div class="dm">Delete <span id="delName"></span>?</div>
+      <div class="ds">This will be permanently removed from local storage.</div>
+    </div>
+    <div class="mfoot">
+      <button class="bcancel" onclick="closeOv('ovDel')">Cancel</button>
+      <button class="bdel" onclick="confirmDel()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIEW MODAL ══ -->
+<div class="ov" id="ovView">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle" id="vTitle">Campaign Details</span><button class="mcl" onclick="closeOv('ovView')">✕</button></div>
+    <div class="mbody" id="vBody"></div>
+    <div class="mfoot">
+      <button class="bcancel" onclick="closeOv('ovView')">Close</button>
+      <button class="bsave" onclick="openCharts(viewId);closeOv('ovView')">📊 View Charts</button>
+      <button class="bsave" onclick="editFromView()">✏️ Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHARTS MODAL ══ -->
+<div class="ov" id="ovCharts">
+  <div class="modal lg">
+    <div class="mhdr">
+      <div>
+        <div class="mtitle" id="cTitle">Charts</div>
+        <div style="font-size:12px;color:#65676b;margin-top:2px;">1 Jun 2024 – 23 Jun 2024 · Simulated data for demo</div>
+      </div>
+      <button class="mcl" onclick="closeOv('ovCharts')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="kpis" id="kpis"></div>
+      <div class="ctabs">
+        <button class="ctab active" onclick="swChart('results',this)">📊 Results</button>
+        <button class="ctab" onclick="swChart('reach',this)">👥 Reach</button>
+        <button class="ctab" onclick="swChart('impressions',this)">👁 Impressions</button>
+        <button class="ctab" onclick="swChart('spent',this)">💰 Amount Spent</button>
+        <button class="ctab" onclick="swChart('cpr',this)">🎯 Cost per Result</button>
+      </div>
+      <div class="cwrap"><canvas id="mchart"></canvas></div>
+    </div>
+  </div>
+</div>
+<!-- All JavaScript logic -->
+<script src="script.js"></script>
+
+</body>
+</html>

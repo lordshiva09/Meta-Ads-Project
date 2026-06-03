@@ -1,0 +1,425 @@
+/* ==========================================================
+   style.css  —  Meta Ads Manager UI
+   ==========================================================
+   FILE STRUCTURE:
+   1.  Global reset & body
+   2.  Top Navigation Bar
+   3.  Left Sidebar
+   4.  Main Layout
+   5.  Page Header
+   6.  Search Row
+   7.  Date Bar
+   8.  Tabs (Campaigns / Ad sets / Ads)
+   9.  Toolbar (Create, Edit, Delete buttons)
+   10. Table + Horizontal Scroll + Sticky Columns
+   11. Toggle Switch
+   12. Campaign Name Cell + Hover Actions
+   13. Status Badges
+   14. Table Footer (Summary Row)
+   15. Empty State
+   16. Toast Notifications
+   17. Modal System (Overlay + Cards)
+   18. Form Elements
+   19. Delete Modal
+   20. Modal Buttons
+   21. KPI Cards (Charts)
+   22. Chart Tabs
+   23. Notification Popup
+   24. Ad Format Badge
+   25. View Detail Grid
+   26. Bottom Banner
+   27. Checkbox styling
+   ========================================================== */
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;background:#f0f2f5;color:#1c1e21;}
+
+/* ── TOP NAV ──
+   Blue top navigation bar (fixed, z-index:300)
+   .topnav       → full-width bar
+   .tn-logo      → Meta logo container
+   .tn-title     → "Meta Ads Manager" text
+   .tn-sp        → flex spacer
+   .tn-ic        → round icon buttons (bell, user)
+*/
+.topnav{height:40px;background:#1877f2;display:flex;align-items:center;padding:0 12px;position:fixed;top:0;left:0;right:0;z-index:300;}
+.tn-logo{width:40px;height:26px;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;}
+.tn-title{color:white;font-weight:700;font-size:15px;}
+.tn-sp{flex:1;}
+.tn-ic{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;margin-left:4px;}
+
+/* ── SIDEBAR ──
+   Left vertical icon sidebar (fixed, 48px wide)
+   .sidebar      → outer container
+   .si           → each icon button (36×36)
+   .si.active    → highlighted state (blue bg)
+   .si-badge     → red notification dot
+   .sdiv         → horizontal divider line
+   .sbottom      → bottom-pinned icon group
+*/
+.sidebar{width:48px;background:white;height:calc(100vh - 40px);position:fixed;top:40px;left:0;border-right:1px solid #dadde1;display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:2px;z-index:200;}
+.si{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#606770;transition:background .12s;position:relative;}
+.si:hover{background:#f0f2f5;color:#1c1e21;}
+.si.active{background:#e7f3ff;color:#1877f2;}
+.si svg{width:18px;height:18px;fill:currentColor;}
+.si-badge{position:absolute;top:2px;right:2px;width:14px;height:14px;background:#fa3e3e;color:white;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.sdiv{width:28px;height:1px;background:#e4e6ea;margin:4px 0;}
+.sbottom{margin-top:auto;padding-bottom:10px;display:flex;flex-direction:column;align-items:center;gap:2px;}
+
+/* ── LAYOUT ──
+   Main page layout (flex row)
+   .layout       → flex container, margin-top:40px
+   .main         → right side content area
+*/
+.layout{display:flex;margin-top:40px;}
+.main{margin-left:48px;flex:1;padding-bottom:44px;}
+
+/* ── PAGE HEADER ──
+   White header below topnav
+   .phdr         → 52px height flex row
+   .phdr-title   → "Campaigns / Ad sets / Ads" text
+   .acct-sel     → account dropdown button
+   .phdr-sp      → spacer
+   .phdr-upd     → "Updated just now" text
+   .btn-discard  → white outline button
+   .btn-review   → blue "Review and publish" button
+   .btn-ico      → icon-only buttons (···, chart)
+*/
+.phdr{background:white;border-bottom:1px solid #dadde1;padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;}
+.phdr-title{font-size:20px;font-weight:700;}
+.acct-sel{display:flex;align-items:center;gap:6px;border:1px solid #ccd0d5;border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer;background:white;margin-left:4px;}
+.acct-sel:hover{background:#f2f2f2;}
+.phdr-sp{flex:1;}
+.phdr-upd{font-size:13px;color:#65676b;display:flex;align-items:center;gap:5px;}
+.btn-discard{background:white;border:1px solid #ccd0d5;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-discard:hover{background:#f2f2f2;}
+.btn-review{background:#1877f2;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;}
+.btn-review:hover{background:#166fe5;}
+.btn-ico{background:none;border:none;cursor:pointer;color:#65676b;font-size:16px;padding:4px 6px;border-radius:4px;}
+.btn-ico:hover{background:#f0f2f5;}
+
+/* ── SEARCH ROW ──
+   Search/filter input bar below page header
+   .srow         → padding wrapper
+   .srch         → input field (380px wide)
+*/
+.srow{background:white;border-bottom:1px solid #dadde1;padding:8px 20px;}
+.srch{width:380px;height:34px;border:1px solid #ccd0d5;border-radius:6px;padding:0 12px;font-size:13px;outline:none;}
+.srch:focus{border-color:#1877f2;box-shadow:0 0 0 2px rgba(24,119,242,.15);}
+
+/* ── DATE BAR ──
+   Date range picker row (right-aligned)
+   .datebar      → flex row, right-aligned
+   .dpick        → date range button with calendar icon
+*/
+.datebar{background:white;border-bottom:1px solid #dadde1;padding:7px 20px;display:flex;align-items:center;justify-content:flex-end;gap:8px;}
+.dpick{display:flex;align-items:center;gap:6px;border:1px solid #ccd0d5;border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer;background:white;}
+.dpick:hover{background:#f2f2f2;}
+
+/* ── TABS ──
+   Campaigns / Ad sets / Ads tab strip
+   .tabs         → flex row with bottom border
+   .tab          → each tab button
+   .tab.active   → blue underline + blue text
+   .tab-ic       → small colored icon square
+   .tab-ic.bl    → blue (active tab)
+   .tab-ic.gr    → gray (inactive tab)
+*/
+.tabs{display:flex;border-bottom:1px solid #dadde1;padding:0 16px;background:white;}
+.tab{display:flex;align-items:center;gap:6px;padding:11px 16px;font-size:14px;font-weight:600;border-bottom:3px solid transparent;cursor:pointer;color:#65676b;margin-bottom:-1px;user-select:none;}
+.tab:hover{color:#1c1e21;}
+.tab.active{color:#1877f2;border-bottom-color:#1877f2;}
+.tab-ic{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;}
+.tab-ic.bl{background:#1877f2;color:white;}
+.tab-ic.gr{background:#e4e6ea;color:#65676b;}
+
+/* ── TOOLBAR ──
+   Action buttons row (Create, Edit, Delete, etc.)
+   .tbar         → flex row toolbar
+   .btn-create   → green "+ Create" button
+   .btn-t        → generic outline tool button
+   .btn-t:disabled → faded, non-clickable
+   .tsep         → vertical separator line
+   .tsp          → flex spacer
+   .vdot         → black dot in "View Setup" button
+*/
+.tbar{display:flex;align-items:center;gap:3px;padding:8px 16px;border-bottom:1px solid #dadde1;background:white;flex-wrap:wrap;}
+.btn-create{background:#42b72a;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.btn-create:hover{background:#36a420;}
+.btn-t{background:white;border:1px solid #ccd0d5;border-radius:6px;padding:6px 10px;font-size:13px;font-weight:600;cursor:pointer;color:#1c1e21;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:background .1s;}
+.btn-t:hover{background:#f2f2f2;}
+.btn-t:disabled{opacity:.4;pointer-events:none;}
+.tsep{width:1px;height:24px;background:#dadde1;margin:0 3px;}
+.tsp{flex:1;}
+.vdot{width:10px;height:10px;border-radius:50%;background:#1c1e21;display:inline-block;margin-left:3px;}
+
+/* ── TABLE / SCROLL CONTAINER ──
+   Horizontally scrollable table wrapper
+   .tbl-outer    → overflow-x:auto wrapper
+                    scrollbar styled thin (6px)
+   table         → width:max-content so it overflows
+   th            → header cells (sticky z-index:2)
+   td            → data cells
+   .th-bl        → blue header text (Delivery column)
+
+   STICKY COLUMNS:
+   col 1 (checkbox) → left:0
+   col 2 (toggle)   → left:34px
+   col 3 (name)     → left:86px, right border
+   These stay fixed when table scrolls horizontally.
+*/ — horizontal scroll */
+.tbl-outer{background:white;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tbl-outer::-webkit-scrollbar{height:6px;}
+.tbl-outer::-webkit-scrollbar-thumb{background:#ccd0d5;border-radius:3px;}
+
+table{width:max-content;min-width:100%;border-collapse:collapse;}
+thead tr{background:white;}
+th{padding:10px 12px;text-align:left;font-size:12px;font-weight:700;color:#65676b;white-space:nowrap;border-bottom:1px solid #dadde1;cursor:pointer;user-select:none;}
+th:first-child{padding-left:16px;width:34px;}
+th:nth-child(2){width:52px;}
+.th-bl{color:#1877f2;}
+tbody tr{border-bottom:1px solid #e4e6ea;transition:background .1s;}
+tbody tr:hover{background:#f7f8fa;}
+tbody tr.sel{background:#edf2fb;}
+td{padding:10px 12px;font-size:13px;white-space:nowrap;vertical-align:middle;}
+td:first-child{padding-left:16px;}
+
+/* STICKY FIRST COLUMNS */
+th:nth-child(1),td:nth-child(1){position:sticky;left:0;z-index:2;background:white;}
+th:nth-child(2),td:nth-child(2){position:sticky;left:34px;z-index:2;background:white;}
+th:nth-child(3),td:nth-child(3){position:sticky;left:86px;z-index:2;background:white;border-right:1px solid #e4e6ea;}
+tbody tr.sel td:nth-child(1),
+tbody tr.sel td:nth-child(2),
+tbody tr.sel td:nth-child(3){background:#edf2fb;}
+tbody tr:hover td:nth-child(1),
+tbody tr:hover td:nth-child(2),
+tbody tr:hover td:nth-child(3){background:#f7f8fa;}
+
+/* ── TOGGLE SWITCH ──
+   iOS-style ON/OFF switch
+   .tgl          → outer label (36×20)
+   .tgl input    → hidden real checkbox
+   .tgl-s        → visible slider track
+   .tgl-s::before→ white circular thumb
+   Checked state → blue bg, thumb slides right
+*/
+.tgl{position:relative;display:inline-block;width:36px;height:20px;cursor:pointer;}
+.tgl input{opacity:0;width:0;height:0;}
+.tgl-s{position:absolute;inset:0;border-radius:20px;background:#ccd0d5;transition:background .2s;}
+.tgl-s::before{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:white;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.tgl input:checked+.tgl-s{background:#1877f2;}
+.tgl input:checked+.tgl-s::before{transform:translateX(16px);}
+
+/* ── CAMPAIGN NAME CELL ──
+   Campaign/AdSet/Ad name with hover actions
+   .cname        → blue clickable name text
+   .cactions     → hidden row (shown on tr:hover)
+   .ca            → each action link (View Charts, Edit...)
+   .csep         → gray "|" separator
+*/
+.cname{color:#1877f2;font-weight:600;cursor:pointer;}
+.cname:hover{text-decoration:underline;}
+.cactions{display:none;gap:5px;margin-top:3px;align-items:center;font-size:12px;}
+tr:hover .cactions{display:flex;}
+.ca{color:#65676b;cursor:pointer;display:flex;align-items:center;gap:2px;}
+.ca:hover{color:#1877f2;}
+.csep{color:#dadde1;}
+
+/* ── STATUS BADGES ──
+   Colored pill badges for campaign status
+   .badge        → base pill style
+   .bd           → colored dot inside badge
+   .b-draft      → gray dot, plain text
+   .b-active     → green dot + green bg
+   .b-paused     → gray dot + gray bg
+*/
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;}
+.bd{width:7px;height:7px;border-radius:50%;}
+.b-draft{color:#65676b;}.b-draft .bd{background:#42b72a;}
+.b-active{color:#1a7f1a;background:#e6f9e6;}.b-active .bd{background:#1a7f1a;}
+.b-paused{color:#65676b;background:#f0f2f5;}.b-paused .bd{background:#65676b;}
+
+/* ── TABLE FOOTER (Summary Row) ──
+   Bottom totals row of each table
+   tfoot td      → white bg, top double border
+   .sum-row      → flex row with "Results from N" text
+   .iico         → gray circle "i" info icon
+*/
+tfoot td{background:white;padding:10px 12px;border-top:2px solid #dadde1;color:#65676b;font-size:13px;white-space:nowrap;}
+tfoot td:first-child{padding-left:16px;}
+.sum-row{display:flex;align-items:center;gap:5px;font-size:13px;}
+.iico{width:15px;height:15px;border-radius:50%;background:#65676b;color:white;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-style:italic;font-weight:700;}
+
+/* ── EMPTY STATE ──
+   Shown when no data in a tab
+   .empty        → centered content, 60px padding
+*/
+.empty{text-align:center;padding:60px 20px;background:white;}
+.empty h3{font-size:17px;font-weight:700;color:#1c1e21;margin:10px 0 5px;}
+.empty p{color:#65676b;}
+
+/* ── TOAST NOTIFICATIONS ──
+   Slide-in alerts bottom-right
+   .twrap        → fixed container (bottom:50px right:20px)
+   .toast        → dark pill with colored left border
+   .toast.ok     → green border (success)
+   .toast.er     → red border (error/delete)
+   .toast.in     → blue border (info)
+   @keyframes tin/tout → slide in/out from right
+*/
+.twrap{position:fixed;bottom:50px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{background:#1c1e21;color:white;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);animation:tin .3s ease;min-width:200px;}
+.toast.ok{border-left:4px solid #42b72a;}
+.toast.er{border-left:4px solid #fa3e3e;}
+.toast.in{border-left:4px solid #1877f2;}
+@keyframes tin{from{transform:translateX(80px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes tout{from{opacity:1}to{opacity:0;transform:translateX(80px)}}
+
+/* ── MODAL SYSTEM ──
+   Full-screen overlay + centered modal card
+   .ov           → fixed dark overlay (display:none default)
+   .ov.open      → display:flex (shows modal)
+   .modal        → white rounded card
+   .modal.sm     → narrow 420px variant
+   .modal.lg     → wide 880px variant (charts)
+   .mhdr         → sticky header (title + close btn)
+   .mcl          → ✕ close button
+   .mbody        → scrollable body area
+   .mfoot        → sticky footer (Cancel + Save)
+   @keyframes mpop → scale+fade in animation
+*/
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center;}
+.ov.open{display:flex;}
+.modal{background:white;border-radius:12px;width:600px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.22);animation:mpop .2s ease;}
+.modal.sm{width:420px;}
+.modal.lg{width:880px;max-width:96vw;}
+@keyframes mpop{from{transform:scale(.95) translateY(10px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.mhdr{padding:18px 22px 14px;border-bottom:1px solid #e4e6ea;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:white;z-index:1;}
+.mtitle{font-size:17px;font-weight:700;}
+.mcl{background:none;border:none;font-size:20px;cursor:pointer;color:#65676b;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.mcl:hover{background:#f0f2f5;}
+.mbody{padding:18px 22px;}
+.mfoot{padding:14px 22px;border-top:1px solid #e4e6ea;display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:white;}
+
+/* ── FORM ELEMENTS (inside modals) ──
+   .fg           → form group wrapper (margin-bottom)
+   .fl           → field label
+   .fi           → text/number input
+   .fs           → select dropdown
+   .fta          → textarea
+   .fr2          → 2-column grid row
+   .fr3          → 3-column grid row
+   .fhint        → small gray hint text below field
+   .ferr         → red error text (hidden by default)
+   .fi.inv       → red border (invalid state)
+   .sh           → section heading inside modal
+*/
+.fg{margin-bottom:16px;}
+.fl{display:block;font-size:13px;font-weight:700;color:#1c1e21;margin-bottom:5px;}
+.fl em{color:#fa3e3e;font-style:normal;}
+.fi,.fs,.fta{width:100%;padding:8px 11px;border:1.5px solid #ccd0d5;border-radius:8px;font-size:13px;outline:none;font-family:inherit;background:white;transition:border-color .15s,box-shadow .15s;}
+.fi:focus,.fs:focus,.fta:focus{border-color:#1877f2;box-shadow:0 0 0 2px rgba(24,119,242,.12);}
+.fta{resize:vertical;min-height:70px;}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.fhint{font-size:11px;color:#65676b;margin-top:3px;}
+.ferr{font-size:11px;color:#fa3e3e;margin-top:3px;display:none;}
+.fi.inv{border-color:#fa3e3e;}
+.fi.inv~.ferr{display:block;}
+.sh{font-size:11px;font-weight:700;color:#65676b;text-transform:uppercase;letter-spacing:.5px;margin:20px 0 10px;border-bottom:1px solid #e4e6ea;padding-bottom:5px;}
+
+/* ── DELETE CONFIRM MODAL BODY ──
+   .di → big emoji icon
+   .dm → bold message text
+   .ds → small subtitle text
+*/
+.di{font-size:40px;text-align:center;margin-bottom:10px;}
+.dm{font-size:14px;font-weight:600;text-align:center;margin-bottom:4px;}
+.ds{font-size:13px;color:#65676b;text-align:center;}
+
+/* ── MODAL BUTTON STYLES ──
+   .bcancel → white "Cancel" button
+   .bsave   → blue "Save/Update" button
+   .bdel    → red "Delete" confirm button
+*/
+.bcancel{background:white;border:1px solid #ccd0d5;border-radius:6px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;}
+.bcancel:hover{background:#f2f2f2;}
+.bsave{background:#1877f2;color:white;border:none;border-radius:6px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+.bsave:hover{background:#166fe5;}
+.bdel{background:#fa3e3e;color:white;border:none;border-radius:6px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+.bdel:hover{background:#e03535;}
+
+/* ── KPI CARDS (Charts Modal) ──
+   4-column grid of metric cards
+   .kpis    → grid container
+   .kpi     → each card (gray bg, rounded)
+   .kpi-l   → uppercase label
+   .kpi-v   → large bold value
+   .kpi-s   → small subtitle with % change
+   .up      → green ↑ percentage
+   .dn      → red ↓ percentage
+*/
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.kpi{background:#f7f8fa;border:1px solid #e4e6ea;border-radius:10px;padding:14px 16px;}
+.kpi-l{font-size:11px;font-weight:700;color:#65676b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.kpi-v{font-size:22px;font-weight:800;color:#1c1e21;}
+.kpi-s{font-size:11px;color:#65676b;margin-top:3px;}
+.up{color:#42b72a;font-weight:700;}
+.dn{color:#fa3e3e;font-weight:700;}
+
+/* ── CHART TYPE TABS ──
+   Pill-shaped toggle buttons for chart type
+   .ctabs      → flex wrap row
+   .ctab       → outline pill button
+   .ctab.active→ blue filled
+   .cwrap      → 260px high canvas container
+*/
+.ctabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.ctab{padding:6px 14px;border-radius:20px;border:1.5px solid #ccd0d5;font-size:12px;font-weight:600;cursor:pointer;color:#65676b;background:white;transition:all .15s;}
+.ctab.active{background:#1877f2;color:white;border-color:#1877f2;}
+.ctab:hover:not(.active){background:#f0f2f5;}
+.cwrap{position:relative;height:260px;background:#fafafa;border-radius:10px;padding:12px;}
+
+/* ── NOTIFICATION POPUP ──
+   "Add payment method" floating card
+   .notif       → fixed card (bottom-left)
+   .notif.hidden→ display:none
+   .nh          → header row
+   .nt          → title text
+   .nc          → close ✕ button
+   .nb          → body area
+   .bnotif      → blue full-width CTA button
+*/
+.notif{position:fixed;bottom:60px;left:68px;width:290px;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.18);z-index:500;border:1px solid #e4e6ea;transition:opacity .3s;}
+.notif.hidden{display:none;}
+.nh{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e4e6ea;}
+.nt{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;}
+.nc{background:none;border:none;font-size:16px;cursor:pointer;color:#65676b;}
+.nb{padding:14px;}
+.bnotif{background:#1877f2;color:white;border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-top:12px;}
+.bnotif:hover{background:#166fe5;}
+
+/* ── AD FORMAT BADGE ──
+   Colored label for ad format (Video, Carousel etc)
+   .fmt-badge → small pill with colored text+bg
+*/
+.fmt-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#f0f2f5;color:#65676b;}
+
+/* ── VIEW MODAL GRID ──
+   2-column detail grid in View modal
+   .vg       → CSS grid 2 columns
+   .vf       → each field (label + value)
+*/
+.vg{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.vf label{font-size:11px;font-weight:700;color:#65676b;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px;}
+.vf span{font-size:13px;font-weight:500;}
+
+/* ── BOTTOM BANNER ──
+   Fixed dark footer bar (WSCubeTech promo)
+   .bbanner  → fixed height:36px bar
+*/
+.bbanner{position:fixed;bottom:0;left:0;right:0;height:36px;background:#1c1e21;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;z-index:300;}
+.bbanner b{color:#42b72a;}
+.bbanner a{color:#42b72a;text-decoration:none;}
+
+input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:#1877f2;}
