@@ -2,16 +2,4 @@ services:
   - type: web
     name: meta-ads-project
     runtime: static
-    plan: free
-    branch: main
-    autoDeploy: true
-    buildCommand: ""
     staticPublishPath: .
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: deny
