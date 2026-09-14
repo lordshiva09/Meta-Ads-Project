@@ -34,20 +34,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;background:#f0f2f5;color:#1c1e21;}
 
-/* ── TOP NAV ──
-   Blue top navigation bar (fixed, z-index:300)
-   .topnav       → full-width bar
-   .tn-logo      → Meta logo container
-   .tn-title     → "Meta Ads Manager" text
-   .tn-sp        → flex spacer
-   .tn-ic        → round icon buttons (bell, user)
-*/
-.topnav{height:40px;background:#1877f2;display:flex;align-items:center;padding:0 12px;position:fixed;top:0;left:0;right:0;z-index:300;}
-.tn-logo{width:40px;height:26px;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;}
-.tn-title{color:white;font-weight:700;font-size:15px;}
-.tn-sp{flex:1;}
-.tn-ic{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;margin-left:4px;}
-
 /* ── SIDEBAR ──
    Left vertical icon sidebar (fixed, 48px wide)
    .sidebar      → outer container
@@ -57,7 +43,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
    .sdiv         → horizontal divider line
    .sbottom      → bottom-pinned icon group
 */
-.sidebar{width:48px;background:white;height:calc(100vh - 40px);position:fixed;top:40px;left:0;border-right:1px solid #dadde1;display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:2px;z-index:200;}
+.sidebar{width:48px;background:white;height:100vh;position:fixed;top:0;left:0;border-right:1px solid #dadde1;display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:2px;z-index:200;}
 .si{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#606770;transition:background .12s;position:relative;}
 .si:hover{background:#f0f2f5;color:#1c1e21;}
 .si.active{background:#e7f3ff;color:#1877f2;}
@@ -68,11 +54,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 
 /* ── LAYOUT ──
    Main page layout (flex row)
-   .layout       → flex container, margin-top:40px
+   .layout       → flex container
    .main         → right side content area
 */
-.layout{display:flex;margin-top:40px;}
-.main{margin-left:48px;flex:1;padding-bottom:44px;}
+.layout{display:flex;}
+.main{margin-left:48px;flex:1;}
 
 /* ── PAGE HEADER ──
    White header below topnav
@@ -103,8 +89,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
    .srow         → padding wrapper
    .srch         → input field (380px wide)
 */
-.srow{background:white;border-bottom:1px solid #dadde1;padding:8px 20px;}
-.srch{width:380px;height:34px;border:1px solid #ccd0d5;border-radius:6px;padding:0 12px;font-size:13px;outline:none;}
+.srow{background:white;border-bottom:1px solid #dadde1;padding:0;}
+.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#f0f2f5;padding:10px 20px;}
+.fbtn{background:white;border:1px solid #ccd0d5;border-radius:6px;padding:12px 24px;font-size:13px;font-weight:400;cursor:pointer;color:#1c1e21;display:flex;align-items:center;gap:6px;justify-content:center;min-width:120px;min-height:44px;}
+.fbtn:hover{background:#f2f2f2;}
+.srch{width:100%;height:40px;border:1px solid #ccd0d5;border-radius:8px;padding:0 20px;font-size:14px;outline:none;background:white;}
 .srch:focus{border-color:#1877f2;box-shadow:0 0 0 2px rgba(24,119,242,.15);}
 
 /* ── DATE BAR ──
@@ -125,10 +114,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
    .tab-ic.bl    → blue (active tab)
    .tab-ic.gr    → gray (inactive tab)
 */
-.tabs{display:flex;border-bottom:1px solid #dadde1;padding:0 16px;background:white;}
-.tab{display:flex;align-items:center;gap:6px;padding:11px 16px;font-size:14px;font-weight:600;border-bottom:3px solid transparent;cursor:pointer;color:#65676b;margin-bottom:-1px;user-select:none;}
-.tab:hover{color:#1c1e21;}
-.tab.active{color:#1877f2;border-bottom-color:#1877f2;}
+.tabs{display:flex;border-bottom:1px solid #dadde1;padding:8px 16px;background:white;gap:6px;align-items:center;}
+.tabs-sp{flex:1;}
+.tab{display:flex;align-items:center;gap:2px;padding:4px 3px;font-size:14px;font-weight:600;border:1px solid #dadde1;border-radius:6px;cursor:pointer;color:#65676b;user-select:none;flex:1;}
+.tab:hover{color:#1c1e21;background:#f7f8fa;}
+.tab.active{color:#1877f2;background:#f0f2f5;border-color:#dadde1;}
 .tab-ic{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;}
 .tab-ic.bl{background:#1877f2;color:white;}
 .tab-ic.gr{background:#e4e6ea;color:#65676b;}
@@ -144,8 +134,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
    .vdot         → black dot in "View Setup" button
 */
 .tbar{display:flex;align-items:center;gap:3px;padding:8px 16px;border-bottom:1px solid #dadde1;background:white;flex-wrap:wrap;}
-.btn-create{background:#42b72a;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;}
-.btn-create:hover{background:#36a420;}
+.btn-create{background:#1f5d2a;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:400;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.btn-create:hover{background:#174a21;}
 .btn-t{background:white;border:1px solid #ccd0d5;border-radius:6px;padding:6px 10px;font-size:13px;font-weight:600;cursor:pointer;color:#1c1e21;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:background .1s;}
 .btn-t:hover{background:#f2f2f2;}
 .btn-t:disabled{opacity:.4;pointer-events:none;}
@@ -414,12 +404,7 @@ tfoot td:first-child{padding-left:16px;}
 .vf label{font-size:11px;font-weight:700;color:#65676b;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px;}
 .vf span{font-size:13px;font-weight:500;}
 
-/* ── BOTTOM BANNER ──
-   Fixed dark footer bar (WSCubeTech promo)
-   .bbanner  → fixed height:36px bar
-*/
-.bbanner{position:fixed;bottom:0;left:0;right:0;height:36px;background:#1c1e21;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;z-index:300;}
-.bbanner b{color:#42b72a;}
-.bbanner a{color:#42b72a;text-decoration:none;}
+/* ── PANEL BORDERS ── */
+.tbl-outer{border:1px solid #dadde1;border-radius:8px;overflow:hidden;}
 
 input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:#1877f2;}

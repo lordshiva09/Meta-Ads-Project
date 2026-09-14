@@ -131,17 +131,6 @@
 </head>
 <body>
 
-<!-- TOP NAV -->
-<div class="topnav">
-  <div class="tn-logo">
-    <img src="https://static.xx.fbcdn.net/rsrc.php/yb/r/CnOoIyhtLSO.svg" alt="Meta" style="width:40px;height:auto;display:block;"/>
-  </div>
-  <span class="tn-title">Meta Ads Manager</span>
-  <div class="tn-sp"></div>
-  <div class="tn-ic">🔔</div>
-  <div class="tn-ic">👤</div>
-</div>
-
 <div class="layout">
   <!-- SIDEBAR -->
   <div class="sidebar">
@@ -166,8 +155,8 @@
   <div class="main">
     <!-- PAGE HEADER -->
     <div class="phdr">
-      <span class="phdr-title" id="pageTitle">Campaigns</span>
-      <div class="acct-sel">Harmeet Kaur (785314956799252) <svg width="12" height="12" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></div>
+      <span class="phdr-title" id="pageTitle">Ads</span>
+      <div class="acct-sel"><svg width="14" height="14" viewBox="0 0 24 24" fill="#65676b"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Ruchika (785314956799252) <svg width="12" height="12" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></div>
       <div class="phdr-sp"></div>
       <div class="phdr-upd">Updated just now <svg width="15" height="15" viewBox="0 0 24 24" fill="#65676b" style="cursor:pointer" onclick="toast('Refreshed!','in')"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div>
       <button class="btn-discard" onclick="discardDrafts()">Discard Drafts</button>
@@ -176,23 +165,29 @@
       <button class="btn-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="#65676b"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></button>
     </div>
 
-    <!-- SEARCH -->
-    <div class="srow">
-      <input class="srch" id="srch" placeholder="Search and filter" oninput="renderTable()"/>
+    <!-- FILTER BUTTONS -->
+    <div class="srow filter-row">
+      <button class="fbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>All ads</button>
+      <button class="fbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6.71 19.28A9 9 0 1 1 17.29 19.28" stroke="#1c1e21" stroke-width="2" stroke-linecap="round"/><path d="M12 17v-8m-4.2 4.2L12 9l4.2 4.2" stroke="#1c1e21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Actions</button>
+      <button class="fbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>Had Delivery</button>
+      <button class="fbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></svg>Active Ads</button>
+      <button class="fbtn"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>See more</button>
     </div>
 
-    <!-- DATE -->
-    <div class="datebar">
-      <div class="dpick"><svg width="14" height="14" viewBox="0 0 24 24" fill="#65676b"><path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>This month: 1 Jun 2024 - 23 Jun 2024<svg width="12" height="12" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="#65676b" style="cursor:pointer"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>
+    <!-- SEARCH -->
+    <div class="srow">
+      <input class="srch" id="srch" placeholder="Describe what are you looking for" oninput="renderTable()"/>
     </div>
 
     <div style="background:white;">
       <!-- TABS -->
       <div class="tabs">
         <div class="tab active" id="tab-campaigns" onclick="switchTab('campaigns')"><div class="tab-ic bl" id="tabic-campaigns"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></div>Campaigns</div>
-        <div class="tab" id="tab-adsets" onclick="switchTab('adsets')"><div class="tab-ic gr" id="tabic-adsets"><svg width="11" height="11" viewBox="0 0 24 24" fill="#65676b"><circle cx="12" cy="12" r="9"/></svg></div>Ad sets</div>
+        <div class="tab" id="tab-adsets" onclick="switchTab('adsets')"><div class="tab-ic gr" id="tabic-adsets"><svg width="11" height="11" viewBox="0 0 24 24" fill="#65676b"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></div>Ad sets</div>
         <div class="tab" id="tab-ads" onclick="switchTab('ads')"><div class="tab-ic gr" id="tabic-ads"><svg width="11" height="11" viewBox="0 0 24 24" fill="#65676b"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>Ads</div>
+        <div class="tabs-sp"></div>
+        <div class="dpick"><svg width="14" height="14" viewBox="0 0 24 24" fill="#65676b"><path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>This month: 1 Jun 2024 - 23 Jun 2024<svg width="12" height="12" viewBox="0 0 24 24" fill="#65676b"><path d="M7 10l5 5 5-5z"/></svg></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#65676b" style="cursor:pointer"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>
       </div>
 
       <!-- TOOLBAR -->
@@ -200,26 +195,17 @@
         <button class="btn-create" id="btnCreate" onclick="openAdd()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Create
         </button>
-        <button class="btn-t" title="Duplicate page"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
-        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 10l5 5 5-5z"/></svg></button>
-        <button class="btn-t" id="btnEdit" disabled onclick="editSelected()"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>Edit</button>
+        <button class="btn-t" title="Duplicate page" style="font-weight:400"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>Duplicate</button>
+        <button class="btn-t" id="btnEdit" disabled onclick="editSelected()" style="font-weight:400"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>Edit</button>
+        <button class="btn-t" style="font-weight:400"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>Analyze</button>
         <div class="tsep"></div>
-        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 2v2H5v16h14V4h-2V2H7z"/></svg>A/B test</button>
-        <div class="tsep"></div>
-        <button class="btn-t" onclick="undoLast()" title="Undo"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg></button>
-        <button class="btn-t" id="btnDel" disabled onclick="deleteSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
-        <button class="btn-t" id="btnDup" disabled onclick="dupSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2z"/></svg></button>
-        <button class="btn-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg></button>
-        <button class="btn-t"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1c1e21"><path d="M21.41 11.58l-9-9A2 2 0 0011 2H4a2 2 0 00-2 2v7a2 2 0 00.59 1.42l9 9A2 2 0 0013 22a2 2 0 001.41-.59l7-7A2 2 0 0022 13a2 2 0 00-.59-1.42zM5.5 7A1.5 1.5 0 114 5.5 1.5 1.5 0 015.5 7z"/></svg></button>
-        <button class="btn-t">Rules ▾</button>
+        <button class="btn-t" style="font-weight:400"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 2v2H5v16h14V4h-2V2H7z"/></svg>A/B test</button>
+        <button class="btn-t" style="font-weight:400;border:1px solid #ccd0d5;border-radius:6px;padding:6px 10px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 10l5 5 5-5z"/></svg>More</button>
         <div class="tsp"></div>
-        <button class="btn-t">View Setup<span class="vdot"></span></button>
-        <button class="btn-t"><svg width="15" height="15" viewBox="0 0 24 24" fill="#1c1e21"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
-        <button class="btn-t">⊞</button>
-        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 10l5 5 5-5z"/></svg></button>
-        <div class="tsep"></div>
-        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>Reports ▾</button>
-        <button class="btn-t"><svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Export ▾</button>
+        <button class="btn-t" style="font-weight:400;border:1px solid #ccd0d5;border-radius:6px;padding:6px 10px;">Columns: Performance <svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <button class="btn-t" style="font-weight:400;border:1px solid #ccd0d5;border-radius:6px;padding:6px 10px;">Breakdown <svg width="13" height="13" viewBox="0 0 24 24" fill="#1c1e21"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <button class="btn-t" style="font-weight:400;border:1px solid #ccd0d5;border-radius:6px;padding:6px 10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="#1c1e21"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
+        <button class="btn-t" style="font-weight:400;border:1px solid #ccd0d5;border-radius:6px;padding:6px 10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="#1c1e21"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></button>
       </div>
 
       <!-- TABLE -->
@@ -361,13 +347,11 @@
   <div class="nb">
     <div style="font-size:28px;text-align:center;margin-bottom:8px;">💳</div>
     <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Add payment method</div>
-    <div style="font-size:12px;color:#65676b;line-height:1.5;">There's a problem with the payment method for Harmeet Kaur. You'll need to add or update the payment information before you can publish ads.</div>
+    <div style="font-size:12px;color:#65676b;line-height:1.5;">There's a problem with the payment method for Ruchika. You'll need to add or update the payment information before you can publish ads.</div>
     <button class="bnotif" onclick="toast('Payment method added! (simulated)','ok');document.getElementById('notif').classList.add('hidden')">Add payment method</button>
   </div>
 </div>
 
-<!-- BOTTOM BANNER -->
-<div class="bbanner">BECOME A <b>&nbsp;DIGITAL MARKETER?&nbsp;</b> CALL US AT: <b>&nbsp;+91 93529 76305&nbsp;</b> OR VISIT <a href="#">WWW.WSCUBETECH.COM</a></div>
 <div class="twrap" id="twrap"></div>
 
 <!-- ══ CREATE / EDIT MODAL ══ -->
