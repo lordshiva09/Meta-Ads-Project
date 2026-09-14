@@ -1,5 +1,0 @@
-services:
-  - type: web
-    name: meta-ads-project
-    runtime: static
-    staticPublishPath: .
